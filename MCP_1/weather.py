@@ -10,7 +10,7 @@ async def get_location(location:str) -> str:
 
     """
 
-    return "Its always raining in Surat"
+    return "Its always raining in South gujarat in August"
 
 
 

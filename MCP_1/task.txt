@@ -1,7 +1,0 @@
-1. first create virtual environment 
-    - uv init
-    - uv venv    
-    - .venv\Scripts\activate
-
-2. make requirements and then
-    - uv add -r .\requirements.txt

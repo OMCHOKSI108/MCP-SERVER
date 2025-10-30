@@ -22,7 +22,6 @@ The agent follows a modular architecture with clear separation of concerns:
 
 ## Features
 
-### 🚀 **Dual Interface Support**
 
 ![MCP Integration](assets/mcp.png)
 *Model Context Protocol integration for seamless AI application connectivity*
@@ -31,46 +30,35 @@ The agent follows a modular architecture with clear separation of concerns:
 - **REST API**: Traditional HTTP endpoints for web-based interactions
 - **Seamless Integration**: Works with Claude Desktop, VS Code extensions, and other MCP-compatible tools
 
-### 🧠 **AI-Powered Intelligence**
 - **Google Gemini Integration**: Advanced language model for content analysis and Q&A
 - **Context-Aware Responses**: Answers based specifically on scraped content to minimize hallucination
 - **Intelligent Memory**: Automatic content caching and retrieval optimization
 
-### 🕷️ **Advanced Web Scraping**
 - **Multi-Library Support**: BeautifulSoup4 and Crawl4AI for comprehensive content extraction
 - **Clean Content Processing**: Converts raw HTML to clean, LLM-friendly text
 - **Error Resilience**: Robust handling of network issues and malformed content
 
-### 💾 **Persistent Memory System**
 - **SQLite Database**: Lightweight, file-based storage for scraped content
 - **Automatic Deduplication**: Smart handling of duplicate URLs with timestamp tracking
 - **Fast Retrieval**: Optimized queries for content lookup and search
 
-\
-
-
 
 ## Dependencies
 
-### 🔧 **Core Framework**
 - **FastAPI**: Modern web framework for API development with automatic documentation
 - **uvicorn**: High-performance ASGI server for FastAPI applications
 - **Pydantic**: Data validation and settings management
 
-### 🕷️ **Web Scraping**
 - **requests**: HTTP library for web content fetching
 - **BeautifulSoup4**: HTML parsing and content extraction
 - **Crawl4AI**: Advanced web scraping with AI optimization
 
-### 🧠 **AI Integration**  
 - **google-generativeai**: Google Gemini API client for advanced language processing
 - **python-dotenv**: Secure environment variable management
 
-### 💾 **Data Management**
 - **sqlite3**: Built-in Python database (no installation needed)
 - **pandas/numpy**: Data processing and analysis capabilities
 
-### 📊 **Visualization & Development**
 - **graphviz**: Professional workflow diagram generation
 - **pytest**: Testing framework for comprehensive test coverage
 

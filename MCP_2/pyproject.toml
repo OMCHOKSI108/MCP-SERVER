@@ -8,6 +8,7 @@ dependencies = [
     "numpy>=2.3.4",
     "pandas>=2.3.3",
     "fastapi[standard]",
+    "crawl4ai[playwright]",
     "beautifulsoup4",
     "requests"
 ]

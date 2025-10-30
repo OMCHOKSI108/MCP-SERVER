@@ -1,0 +1,13 @@
+[project]
+name = "mcp-2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.3.4",
+    "pandas>=2.3.3",
+    "fastapi[standard]",
+    "beautifulsoup4",
+    "requests"
+]

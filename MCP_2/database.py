@@ -39,6 +39,15 @@ def add_scraped_data(url: str, content: str):
     conn.commit()
     conn.close()
 
+def get_content_by_url(url: str):
+    """Retrieves the content for a specific URL."""
+    conn = sqlite3.connect(DATABASE_NAME)
+    cursor = conn.cursor()
+    cursor.execute("SELECT content FROM scraped_content WHERE url = ?", (url,))
+    row = cursor.fetchone()
+    conn.close()
+    return row[0] if row else None
+
 def get_all_scraped_data():
     """Retrieves all stored records from the database."""
     conn = sqlite3.connect(DATABASE_NAME)

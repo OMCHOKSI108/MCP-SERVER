@@ -34,3 +34,14 @@ MCP enables powerful integrations across the AI ecosystem:
 - **End Users**: Results in more capable AI assistants that can access your data and take actions
 
 With MCP, you can build AI agents that access your Google Calendar and Notion, create web apps from Figma designs, analyze enterprise databases through chat, or even control 3D printers and other hardware - all through a standardized protocol.
+
+## Projects
+
+Below is a simple, extendable table listing the projects included in this repository. Add a new row for each new project that arrives.
+
+| No. | Project | Description |
+| ---: | ------- | ----------- |
+| 1 | [MCP_1](./MCP_1) | Math Server (stdio), Weather Server (streamable-http), and a client demo showing how to connect both servers. |
+| 2 | [MCP_2](./MCP_2) | FastAPI-based web scraping API that converts pages to LLM-friendly Markdown (Crawl4AI) and persists results to SQLite. |
+
+You can append additional rows below as new projects are added.

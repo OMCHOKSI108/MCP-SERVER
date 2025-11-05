@@ -1,0 +1,87 @@
+{
+  "name": "shiningdocs",
+  "displayName": "ShiningDocs",
+  "description": "AI-powered documentation co-pilot that generates mkdocs-ready documentation sites",
+  "version": "0.0.1",
+  "publisher": "f9245e12-04fe-6641-ac86-509e79f16c74",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": ["documentation", "mkdocs", "ai", "generator", "llm", "openai", "gemini"],
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "icon": "media/icon.png",
+  "activationEvents": [
+    "onCommand:shiningdocs.generate",
+    "onCommand:shiningdocs.openPanel",
+    "onView:shiningdocs.sidebar"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "shiningdocs.generate",
+        "title": "Generate Documentation",
+        "category": "ShiningDocs"
+      },
+      {
+        "command": "shiningdocs.openPanel",
+        "title": "Open ShiningDocs Panel",
+        "category": "ShiningDocs"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "shiningdocs.sidebar",
+          "name": "ShiningDocs",
+          "icon": "$(book)",
+          "contextualTitle": "ShiningDocs"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "shiningdocs.openPanel",
+          "when": "view == shiningdocs.sidebar",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "package": "vsce package --no-dependencies",
+    "publish": "vsce publish --pat $VSCE_TOKEN",
+    "bump:patch": "npm version patch",
+    "bump:minor": "npm version minor",
+    "bump:major": "npm version major"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/jest": "^30.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^16.18.126",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "jest": "^30.2.0",
+    "mocha": "^10.1.0",
+    "ts-jest": "^29.4.5",
+    "typescript": "^4.9.4"
+  }
+}

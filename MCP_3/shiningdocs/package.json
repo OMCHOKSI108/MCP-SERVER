@@ -1,0 +1,17 @@
+{
+  "name": "shiningdocs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/vscode": "^1.105.0",
+    "typescript": "^5.9.3",
+    "vsce": "^2.15.0"
+  }
+}

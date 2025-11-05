@@ -1,0 +1,116 @@
+/* ShiningDocs Webview Styles */
+
+body {
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+    background-color: var(--vscode-editor-background);
+    color: var(--vscode-editor-foreground);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.4;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: var(--vscode-textLink-foreground);
+    margin-bottom: 10px;
+}
+
+p {
+    color: var(--vscode-descriptionForeground);
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--vscode-input-foreground);
+}
+
+select, input, textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--vscode-input-border);
+    border-radius: 3px;
+    background-color: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+    font-family: inherit;
+    font-size: inherit;
+    box-sizing: border-box;
+}
+
+select:focus, input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--vscode-focusBorder);
+}
+
+input[type="password"] {
+    font-family: monospace;
+}
+
+button {
+    padding: 8px 16px;
+    border: 1px solid var(--vscode-button-border);
+    border-radius: 3px;
+    background-color: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    margin-right: 10px;
+}
+
+button:hover {
+    background-color: var(--vscode-button-hoverBackground);
+}
+
+.primary-button {
+    background-color: var(--vscode-button-background);
+    border-color: var(--vscode-button-border);
+    color: var(--vscode-button-foreground);
+    font-weight: 600;
+    padding: 12px 24px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.primary-button:hover {
+    background-color: var(--vscode-button-hoverBackground);
+}
+
+.status {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 3px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.status.ready {
+    background-color: var(--vscode-notificationsInfoIcon-foreground);
+    color: var(--vscode-editor-background);
+}
+
+.status.generating {
+    background-color: var(--vscode-notificationsWarningIcon-foreground);
+    color: var(--vscode-editor-background);
+}
+
+.status.success {
+    background-color: var(--vscode-notificationsInfoIcon-foreground);
+    color: var(--vscode-editor-background);
+}
+
+.status.error {
+    background-color: var(--vscode-notificationsErrorIcon-foreground);
+    color: var(--vscode-editor-background);
+}

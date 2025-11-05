@@ -1,0 +1,22 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#007ACC" stroke="#005A9E" stroke-width="8"/>
+
+  <!-- Book pages -->
+  <rect x="32" y="40" width="64" height="48" rx="4" fill="#FFFFFF" stroke="#005A9E" stroke-width="2"/>
+  <rect x="36" y="44" width="56" height="4" fill="#007ACC" opacity="0.3"/>
+  <rect x="36" y="52" width="48" height="4" fill="#007ACC" opacity="0.2"/>
+  <rect x="36" y="60" width="52" height="4" fill="#007ACC" opacity="0.25"/>
+  <rect x="36" y="68" width="44" height="4" fill="#007ACC" opacity="0.2"/>
+  <rect x="36" y="76" width="50" height="4" fill="#007ACC" opacity="0.3"/>
+
+  <!-- AI sparkle effect -->
+  <circle cx="80" cy="30" r="3" fill="#FFD700"/>
+  <circle cx="88" cy="25" r="2" fill="#FFD700" opacity="0.8"/>
+  <circle cx="95" cy="32" r="2.5" fill="#FFD700" opacity="0.6"/>
+  <circle cx="85" cy="35" r="1.5" fill="#FFD700" opacity="0.9"/>
+
+  <!-- Shine lines -->
+  <line x1="75" y1="25" x2="82" y2="18" stroke="#FFD700" stroke-width="2" opacity="0.7"/>
+  <line x1="90" y1="20" x2="95" y2="15" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/>
+</svg>

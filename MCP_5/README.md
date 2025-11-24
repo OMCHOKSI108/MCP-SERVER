@@ -13,5 +13,25 @@ The server offers a single primary tool that accepts Manim code, the name of the
 2. The AI generates complete Manim Python code with a scene class.
 3. The AI invokes the MCP tool `render_manim_scene(manim_code, scene_name, quality, preview)` on this server.
 4. The server runs Manim and returns a JSON object containing media output paths, logs, and the temporary directory.
-5. The AI may optionally call the second tool `cleanup_temp_dir(tmp_dir)` to delete temporary files after use.
+## Screenshots
+
+### Claude Desktop Integration
+![Claude Desktop Integration](assets/claude_op2.png)
+*Claude Desktop using the Manim MCP server to render educational animations*
+
+### Convolutional Neural Network Animation
+![CNN Animation](assets/CNN.png)
+*Example CNN visualization showing convolution, pooling, and classification layers*
+
+### Logistic Regression Animation
+![Logistic Regression Animation](assets/logisticregression.png)
+*Educational animation explaining logistic regression with sigmoid function and decision boundaries*
+
+### MCP Server Architecture
+![MCP Server](assets/mcp.png)
+*Model Context Protocol server setup and communication flow*
+
+### Demo Animation
+![Demo Animation](Demo-manim-mcp.gif)
+*Sample Manim animation rendered through the MCP server*
 

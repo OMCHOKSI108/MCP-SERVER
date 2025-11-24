@@ -157,3 +157,16 @@ def cleanup_temp_dir(tmp_dir: str) -> str:
 if __name__ == "__main__":
     # Run as an MCP server over stdio
     mcp.run(transport="stdio")
+
+    # Quick local test (uncomment to test locally)
+    # result = render_manim_scene(
+    #     manim_code="""from manim import *
+    #
+    # class Test(Scene):
+    #     def construct(self):
+    #         self.play(Write(Text('Test')))
+    #         self.wait(1)
+    # """,
+    #     scene_name="Test"
+    # )
+    # print(result)

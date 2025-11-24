@@ -1,8 +1,7 @@
 import os
 import shutil
 import subprocess
-import tempfile
-from dataclasses import dataclass, asdict
+import time
 from typing import List, Optional, Dict, Any
 
 from mcp.server import FastMCP
@@ -17,85 +16,17 @@ BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "manim_media
 os.makedirs(BASE_DIR, exist_ok=True)
 
 
-@dataclass
-class ManimOutputFile:
-    path: str
-    kind: str  # "video" | "image" | "other"
-    size_bytes: int
-
-
-@dataclass
-class ManimResult:
-    success: bool
-    message: str
-    tmp_dir: str
-    outputs: List[ManimOutputFile]
-    stdout: str
-    stderr: str
-    command: List[str]
-
-
-def _quality_to_flag(quality: Optional[str]) -> str:
-    """
-    Map human-friendly quality to manim flags.
-    - low   -> -ql
-    - medium-> -qm
-    - high  -> -qh
-    """
-    if not quality:
-        return "-ql"
-    q = quality.lower()
-    if q in ("low", "l"):
-        return "-ql"
-    if q in ("medium", "m", "med"):
-        return "-qm"
-    if q in ("high", "h"):
-        return "-qh"
-    # fallback
-    return "-ql"
-
-
-def _discover_outputs(root: str) -> List[ManimOutputFile]:
-    """Scan a directory for video/image files produced by Manim."""
-    outputs: List[ManimOutputFile] = []
-    video_exts = {".mp4", ".mov", ".avi", ".mkv", ".gif"}
-    image_exts = {".png", ".jpg", ".jpeg", ".svg"}
-
-    for dirpath, _, filenames in os.walk(root):
-        for name in filenames:
-            full = os.path.join(dirpath, name)
-            ext = os.path.splitext(name)[1].lower()
-            if not os.path.isfile(full):
-                continue
-
-            if ext in video_exts:
-                kind = "video"
-            elif ext in image_exts:
-                kind = "image"
-            else:
-                kind = "other"
-
-            try:
-                size = os.path.getsize(full)
-            except OSError:
-                size = 0
-
-            outputs.append(ManimOutputFile(path=full, kind=kind, size_bytes=size))
-
-    return outputs
-
-
 @mcp.tool()
 def render_manim_scene(
     manim_code: str,
     scene_name: str,
-    quality: str = "low",
+    quality: str = "high",
     preview: bool = False,
     output_format: str = "video",
     extra_cli_args: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
-    Render a Manim scene in ONE go.
+    Render a Manim scene to full video just like CLI: manim -pqh scene.py <SceneName>
 
     Args:
       manim_code:
@@ -103,108 +34,115 @@ def render_manim_scene(
       scene_name:
         Name of the Scene class to render (e.g. "HelloManim").
       quality:
-        "low" | "medium" | "high" (mapped to -ql/-qm/-qh). Default: "low".
+        Quality setting. Default "high" uses -qh.
       preview:
-        If true, adds `-p` to open the result with the system player (if supported).
+        If true, adds `-p` to open the result with the system player.
       output_format:
         Currently just informational. Manim decides actual format (video/image).
       extra_cli_args:
         Extra flags to pass directly to manim CLI, e.g. ["--fps", "60"].
 
     Returns:
-      JSON-serializable dict with:
+      JSON with success status and file paths:
         - success: bool
-        - message: str
-        - tmp_dir: str
-        - outputs: list of {path, kind, size_bytes}
-        - stdout: str
-        - stderr: str
-        - command: list[str]
+        - video_path: str (absolute path to MP4)
+        - thumbnail_path: str (absolute path to thumbnail if available)
+        - error: str (only if success is false)
     """
 
-    # 1. Create isolated temp directory under BASE_DIR
-    tmpdir = tempfile.mkdtemp(prefix="run_", dir=BASE_DIR)
-    script_path = os.path.join(tmpdir, "scene.py")
+    # 1. Create timestamped run folder
+    timestamp = str(int(time.time()))
+    run_folder = f"run_{timestamp}"
+    run_path = os.path.join(BASE_DIR, run_folder)
+    os.makedirs(run_path, exist_ok=True)
+
+    script_path = os.path.join(run_path, "scene.py")
 
     try:
         # 2. Write the Manim Python code
         with open(script_path, "w", encoding="utf-8") as f:
             f.write(manim_code)
 
-        # 3. Build manim CLI command
-        quality_flag = _quality_to_flag(quality)
-        cmd: List[str] = [MANIM_EXECUTABLE, quality_flag]
-
-        # Force media_dir inside this tmpdir so everything is self-contained
-        cmd.extend(["--media_dir", os.path.join(tmpdir, "media")])
+        # 3. Build manim CLI command (always use high quality -qh)
+        cmd: List[str] = [MANIM_EXECUTABLE, "-qh"]
 
         if preview:
             cmd.append("-p")
 
-        cmd.append(script_path)
+        cmd.append("scene.py")
         cmd.append(scene_name)
 
         if extra_cli_args:
             cmd.extend(extra_cli_args)
 
-        # 4. Run Manim
+        # 4. Run Manim (block until completion)
         try:
             proc = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                cwd=tmpdir,
+                cwd=run_path,  # Run in the run folder
             )
         except FileNotFoundError as e:
-            result = ManimResult(
-                success=False,
-                message=f"Manim executable not found: {MANIM_EXECUTABLE}",
-                tmp_dir=tmpdir,
-                outputs=[],
-                stdout="",
-                stderr=str(e),
-                command=cmd,
-            )
-            return asdict(result)
+            return {
+                "success": False,
+                "error": f"Manim executable not found: {MANIM_EXECUTABLE}"
+            }
 
-        # 5. Find output files (videos/images)
-        media_root = os.path.join(tmpdir, "media")
-        outputs = _discover_outputs(media_root) if os.path.exists(media_root) else []
+        # 5. Check if Manim succeeded
+        if proc.returncode != 0:
+            return {
+                "success": False,
+                "error": f"Manim failed with return code {proc.returncode}. Stderr: {proc.stderr}"
+            }
 
-        success = proc.returncode == 0 and any(o.kind == "video" or o.kind == "image" for o in outputs)
+        # 6. Locate the final MP4 output
+        # Expected path: manim_media/run_<timestamp>/media/videos/scene/1080p60/<SceneName>.mp4
+        video_dir = os.path.join(run_path, "media", "videos", "scene", "1080p60")
+        video_filename = f"{scene_name}.mp4"
+        video_path = os.path.join(video_dir, video_filename)
 
-        # 6. Build result
-        message = "Render successful." if success else "Render failed."
-        result = ManimResult(
-            success=success,
-            message=message,
-            tmp_dir=tmpdir,
-            outputs=outputs,
-            stdout=proc.stdout,
-            stderr=proc.stderr,
-            command=cmd,
-        )
+        if not os.path.exists(video_path):
+            # Try alternative quality folders if 1080p60 doesn't exist
+            for quality_folder in ["720p30", "480p15", "360p15"]:
+                alt_video_dir = os.path.join(run_path, "media", "videos", "scene", quality_folder)
+                alt_video_path = os.path.join(alt_video_dir, video_filename)
+                if os.path.exists(alt_video_path):
+                    video_path = alt_video_path
+                    break
+            else:
+                return {
+                    "success": False,
+                    "error": f"Video file not found at expected locations. Manim stdout: {proc.stdout}"
+                }
 
-        return asdict(result)
+        # 7. Look for thumbnail (optional)
+        thumbnail_path = None
+        images_dir = os.path.join(run_path, "media", "images", "scene", "1080p60")
+        thumbnail_filename = f"{scene_name}.png"
+        potential_thumbnail = os.path.join(images_dir, thumbnail_filename)
+        if os.path.exists(potential_thumbnail):
+            thumbnail_path = potential_thumbnail
+
+        # 8. Return success with paths
+        return {
+            "success": True,
+            "video_path": video_path,
+            "thumbnail_path": thumbnail_path
+        }
 
     except Exception as e:
-        result = ManimResult(
-            success=False,
-            message=f"Unexpected error: {e}",
-            tmp_dir=tmpdir,
-            outputs=[],
-            stdout="",
-            stderr=str(e),
-            command=[],
-        )
-        return asdict(result)
+        return {
+            "success": False,
+            "error": f"Unexpected error: {str(e)}"
+        }
 
 
 @mcp.tool()
 def cleanup_temp_dir(tmp_dir: str) -> str:
     """
-    Delete a temporary directory returned by render_manim_scene.tmp_dir.
-    Use this after you’re done with the outputs.
+    Delete a temporary directory returned by render_manim_scene.
+    Use this after you're done with the outputs.
     """
     try:
         if os.path.exists(tmp_dir):

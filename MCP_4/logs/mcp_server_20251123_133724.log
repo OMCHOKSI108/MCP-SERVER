@@ -1,0 +1,4 @@
+2025-11-23 13:37:26,150 - AI-Workflow-Orchestrator-MCP - INFO - Loaded dataset from datasets/amazon_reviews.csv: 10 rows, 4 columns
+2025-11-23 13:37:26,177 - AI-Workflow-Orchestrator-MCP - INFO - Performed sentiment analysis on column 'review_text'
+2025-11-23 13:37:29,519 - AI-Workflow-Orchestrator-MCP - INFO - Performed K-Means clustering with 3 clusters on features: ['rating', 'sentiment_score']
+2025-11-23 13:37:33,443 - AI-Workflow-Orchestrator-MCP - INFO - Generated report: analysis_report_20251123_133729.md

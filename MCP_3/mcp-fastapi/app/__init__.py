@@ -1,0 +1,1 @@
+"""SensCoder MCP Server package."""

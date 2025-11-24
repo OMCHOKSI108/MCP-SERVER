@@ -1,0 +1,11 @@
+2025-11-23 16:14:30,100 - AI-Workflow-Orchestrator-MCP - INFO - Loaded dataset from datasets/amazon_reviews.csv: 10 rows, 4 columns
+2025-11-23 16:14:30,104 - AI-Workflow-Orchestrator-MCP - INFO - Performed sentiment analysis on column 'review_text'
+2025-11-23 16:14:31,688 - AI-Workflow-Orchestrator-MCP - INFO - Performed K-Means clustering with 3 clusters on features: ['rating', 'sentiment_score']
+2025-11-23 16:14:31,698 - AI-Workflow-Orchestrator-MCP - INFO - Extracted top 10 topics from column 'review_text'
+2025-11-23 16:14:32,577 - AI-Workflow-Orchestrator-MCP - INFO - Generated report and visualizations in outputs
+2025-11-23 16:14:32,581 - AI-Workflow-Orchestrator-MCP - INFO - Loaded dataset from datasets/amazon_reviews.csv: 10 rows, 4 columns
+2025-11-23 16:14:32,586 - AI-Workflow-Orchestrator-MCP - INFO - Performed sentiment analysis on column 'review_text'
+2025-11-23 16:14:32,628 - AI-Workflow-Orchestrator-MCP - INFO - Performed K-Means clustering with 3 clusters on features: ['rating', 'sentiment_score']
+2025-11-23 16:14:32,635 - AI-Workflow-Orchestrator-MCP - INFO - Extracted top 10 topics from column 'review_text'
+2025-11-23 16:14:33,526 - AI-Workflow-Orchestrator-MCP - INFO - Generated report and visualizations in outputs/run_20251123_161432
+2025-11-23 16:14:33,532 - AI-Workflow-Orchestrator-MCP - INFO - Completed full analysis run: 20251123_161432

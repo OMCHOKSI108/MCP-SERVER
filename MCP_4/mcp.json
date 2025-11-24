@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ai-workflow-orchestrator": {
+      "command": "D:\\WORKSPACE\\MCP\\MCP_4\\mcp\\Scripts\\python.exe",
+      "args": ["D:\\WORKSPACE\\MCP\\MCP_4\\main.py"]
+    }
+  }
+}

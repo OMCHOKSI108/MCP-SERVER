@@ -1,0 +1,150 @@
+// SensCoder MCP Server - Local-First Coding Assistant
+digraph SensCoder_Architecture {
+	nodesep=0.8 rankdir=TB ranksep=1.2 splines=ortho
+	node [fillcolor=lightblue fontname=Helvetica fontsize=10 shape=box style="rounded,filled"]
+	edge [fontname=Helvetica fontsize=9]
+	subgraph cluster_users {
+		color=lightgrey label="Users & AI Applications" style=filled
+		web_users [label="Web Users
+(Browser)" fillcolor=beige shape=ellipse]
+		admin_users [label="Admin Users
+(Management)" fillcolor=lightcoral shape=ellipse]
+		ai_apps [label="AI Applications
+(Claude, Cursor, VS Code)" fillcolor=lightcyan shape=ellipse]
+	}
+	subgraph cluster_frontend {
+		color=lightgreen label="Frontend - React/TypeScript (Vite)" style=filled
+		dashboard [label="Dashboard
+(Chat, MCP Control)"]
+		admin_panel [label="Admin Panel
+(User Mgmt, Logs)"]
+		auth_ui [label="Authentication
+(Login, Signup)"]
+		api_client [label="API Client
+(axios + JWT)"]
+	}
+	subgraph cluster_backend {
+		color=lightyellow label="Backend - Node.js/Express" style=filled
+		subgraph cluster_auth {
+			label="Authentication & Security"
+			jwt_auth [label="JWT Authentication"]
+			admin_mw [label="Admin Middleware"]
+			rate_limit [label="Rate Limiting"]
+		}
+		subgraph cluster_routes {
+			label="API Routes"
+			auth_routes [label="Auth Routes
+(/auth/*)"]
+			admin_routes [label="Admin Routes
+(/admin/*)"]
+			chat_routes [label="Chat Routes
+(/chat)"]
+			mcp_routes [label="MCP Routes
+(/mcp/*)"]
+			settings_routes [label="Settings Routes
+(/settings)"]
+		}
+		subgraph cluster_services {
+			label="Services & Logic"
+			activity_log [label="Activity Logging
+(Admin Actions)"]
+			user_mgmt [label="User Management"]
+			mcp_manager [label="MCP Server Manager
+(Start/Stop/Status)"]
+		}
+	}
+	subgraph cluster_database {
+		color=lightcoral label="Database - MongoDB" style=filled
+		users [label="Users Collection
+(auth, profile, settings)" fillcolor=lightgreen shape=cylinder]
+		activity_logs [label="Activity Logs
+(admin actions, audit)" fillcolor=lightgreen shape=cylinder]
+		gemini_keys [label="Gemini API Keys
+(AI service config)" fillcolor=lightgreen shape=cylinder]
+		system_settings [label="System Settings
+(config, limits)" fillcolor=lightgreen shape=cylinder]
+	}
+	subgraph cluster_mcp {
+		color=lightblue label="MCP Server - FastAPI/Python" style=filled
+		subgraph cluster_mcp_core {
+			label="MCP Protocol Core"
+			mcp_router [label="MCP Router
+(/mcp/*)"]
+			tool_registry [label="Tool Registry
+(8+ Tools)"]
+			resource_mgr [label="Resource Manager"]
+			prompt_mgr [label="Prompt Manager"]
+		}
+		subgraph cluster_tools {
+			label="Available Tools"
+			file_ops [label="File Operations
+(read, list, search)"]
+			git_ops [label="Git Operations
+(status, diff, commit)"]
+			run_terminal [label="Terminal Commands
+(safe execution)"]
+			web_search [label="Web Search
+(information gathering)"]
+			code_analysis [label="Code Analysis
+(syntax, structure)"]
+		}
+		subgraph cluster_mcp_auth {
+			label="MCP Authentication"
+			jwt_validation [label="JWT Token Validation"]
+			user_context [label="User Context
+(project access)"]
+		}
+	}
+	subgraph cluster_external {
+		color=lightpink label="External Services & APIs" style=filled
+		gemini_ai [label="Google Gemini AI
+(Chat, Analysis)" fillcolor=gold shape=diamond]
+		github_api [label="GitHub API
+(Repository access)" fillcolor=lightgrey shape=diamond]
+		file_system [label="Local File System
+(Project files)" fillcolor=lightyellow shape=folder]
+	}
+	web_users -> dashboard [label="Browser Access"]
+	admin_users -> admin_panel [label="Admin Dashboard"]
+	ai_apps -> mcp_server [label="MCP Protocol" style=dashed]
+	dashboard -> api_client
+	admin_panel -> api_client
+	auth_ui -> api_client
+	api_client -> auth_routes [label="HTTP Requests"]
+	api_client -> admin_routes
+	api_client -> chat_routes
+	api_client -> mcp_routes
+	api_client -> settings_routes
+	auth_routes -> jwt_auth [label="Validate Credentials"]
+	admin_routes -> admin_mw [label="Check Admin Role"]
+	chat_routes -> rate_limit [label="Rate Limiting"]
+	mcp_routes -> jwt_auth [label="Validate Token"]
+	auth_routes -> users [label="User CRUD"]
+	admin_routes -> users [label="User Management"]
+	admin_routes -> activity_logs [label="Log Actions"]
+	admin_routes -> gemini_keys [label="API Key Management"]
+	admin_routes -> system_settings [label="System Config"]
+	activity_log -> activity_logs [label="Audit Trail"]
+	user_mgmt -> users [label="User Operations"]
+	mcp_routes -> mcp_manager [label="Start/Stop/Status"]
+	mcp_manager -> mcp_router [label="Process Management" style=dashed]
+	mcp_router -> jwt_validation [label="Authenticate Request"]
+	jwt_validation -> tool_registry [label="Route to Tool"]
+	tool_registry -> file_ops [label="File Operations"]
+	tool_registry -> git_ops [label="Git Operations"]
+	tool_registry -> run_terminal [label="Terminal Commands"]
+	tool_registry -> web_search [label="Web Search"]
+	tool_registry -> code_analysis [label="Code Analysis"]
+	file_ops -> file_system [label="Read/Write Files"]
+	git_ops -> github_api [label="Repository Operations"]
+	run_terminal -> file_system [label="Execute Commands"]
+	web_search -> github_api [label="Search Repositories"]
+	chat_routes -> gemini_ai [label="AI Chat Requests"]
+	gemini_ai -> chat_routes [label="AI Responses"]
+	chat_routes -> activity_log [label="Log Conversations"]
+	tool_registry -> ai_apps [label="Tool Results" style=dashed]
+	resource_mgr -> ai_apps [label=Resources style=dashed]
+	prompt_mgr -> ai_apps [label=Prompts style=dashed]
+	mcp_manager -> mcp_router [label="Health Checks" style=dotted]
+	activity_log -> admin_panel [label="Display Logs" style=dotted]
+}

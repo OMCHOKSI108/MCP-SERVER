@@ -1,0 +1,4 @@
+2025-11-23 13:45:54,180 - AI-Workflow-Orchestrator-MCP - INFO - Loaded dataset from datasets/test.csv: 399999 rows, 3 columns
+2025-11-23 13:45:57,233 - AI-Workflow-Orchestrator-MCP - ERROR - Column 'review' not found.
+2025-11-23 13:45:57,235 - AI-Workflow-Orchestrator-MCP - ERROR - Features not found: ['rating', 'sentiment_score']
+2025-11-23 13:45:57,292 - AI-Workflow-Orchestrator-MCP - INFO - Generated report and visualizations in .

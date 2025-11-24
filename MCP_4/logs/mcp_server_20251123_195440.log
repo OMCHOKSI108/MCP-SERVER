@@ -1,0 +1,5 @@
+2025-11-23 19:56:36,090 - AI-Workflow-Orchestrator-MCP - INFO - Performed sentiment analysis on column 'review_text'
+2025-11-23 19:56:38,263 - AI-Workflow-Orchestrator-MCP - INFO - Performed K-Means clustering with 3 clusters on features: ['rating', 'sentiment_score']
+2025-11-23 19:56:52,294 - AI-Workflow-Orchestrator-MCP - INFO - Extracted top 10 topics from column 'review_text'
+2025-11-23 19:56:55,189 - AI-Workflow-Orchestrator-MCP - INFO - Generated report and visualizations in outputs/run_20251123_195441
+2025-11-23 19:56:55,304 - AI-Workflow-Orchestrator-MCP - INFO - Completed full analysis run: 20251123_195441

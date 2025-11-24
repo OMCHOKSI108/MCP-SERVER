@@ -1,0 +1,74 @@
+@import '@fontsource/jetbrains-mono';
+
+:root {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Palette - Dark Mode */
+  --bg-app: #0A0A0A;
+  --bg-surface: #111827;
+  --bg-surface-hover: #1f2937;
+
+  /* Gradients */
+  --gradient-bg: radial-gradient(ellipse at top, rgba(79, 70, 229, 0.05) 0%, rgba(0, 0, 0, 0.8) 50%, #0A0A0A 100%);
+  --gradient-surface: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+  --gradient-accent: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+  --gradient-accent-hover: linear-gradient(135deg, #6366F1 0%, #7C3AED 100%);
+  --gradient-button: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+  --gradient-button-hover: linear-gradient(135deg, #6366F1 0%, #7C3AED 100%);
+
+  /* Accents */
+  --color-accent: #4F46E5; /* Indigo */
+  --color-accent-hover: #6366F1;
+  --color-accent-light: rgba(79, 70, 229, 0.15);
+
+  /* Text */
+  --text-primary: #EDEDED;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+
+  /* Functional */
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-error: #EF4444;
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+
+  /* Spacing & Radius */
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  color: var(--text-primary);
+  background-color: var(--bg-app);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--gradient-bg);
+}
+
+input, button { font-family: inherit; }
+
+/* Animations */
+@keyframes fadeInPage {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpCard {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDownError {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

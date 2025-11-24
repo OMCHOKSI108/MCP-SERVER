@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "senscoder-fastapi": {
+      "command": "uvicorn",
+      "args": ["app.main:app", "--host", "127.0.0.1", "--port", "5050"],
+      "env": {
+        "SENSCODER_PROJECT_ROOT": "D:\\WORKSPACE\\MCP\\MCP_3",
+        "SENSCODER_BACKEND_URL": "http://localhost:4000",
+        "SENSCODER_ALLOW_EXEC": "false",
+        "SENSCODER_ALLOW_GIT": "true"
+      }
+    }
+  }
+}

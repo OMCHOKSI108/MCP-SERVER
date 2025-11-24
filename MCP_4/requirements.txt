@@ -1,0 +1,6 @@
+fastmcp
+pandas
+scikit-learn
+matplotlib
+vaderSentiment
+reportlab

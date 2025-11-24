@@ -1,0 +1,14 @@
+[project]
+name = "mcp-4"
+version = "0.1.0"
+description = "AI Workflow Orchestrator MCP"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp",
+    "pandas",
+    "scikit-learn",
+    "matplotlib",
+    "vaderSentiment",
+    "openpyxl"
+]

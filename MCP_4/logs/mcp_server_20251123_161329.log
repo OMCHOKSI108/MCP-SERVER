@@ -1,0 +1,10 @@
+2025-11-23 16:13:34,387 - AI-Workflow-Orchestrator-MCP - INFO - Loaded dataset from datasets/amazon_reviews.csv: 10 rows, 4 columns
+2025-11-23 16:13:34,391 - AI-Workflow-Orchestrator-MCP - INFO - Performed sentiment analysis on column 'review_text'
+2025-11-23 16:13:36,813 - AI-Workflow-Orchestrator-MCP - INFO - Performed K-Means clustering with 3 clusters on features: ['rating', 'sentiment_score']
+2025-11-23 16:13:36,819 - AI-Workflow-Orchestrator-MCP - INFO - Extracted top 10 topics from column 'review_text'
+2025-11-23 16:13:37,367 - AI-Workflow-Orchestrator-MCP - ERROR - Error generating report: could not convert string to float: 'cluster_1.0'
+2025-11-23 16:13:37,369 - AI-Workflow-Orchestrator-MCP - INFO - Loaded dataset from datasets/amazon_reviews.csv: 10 rows, 4 columns
+2025-11-23 16:13:37,372 - AI-Workflow-Orchestrator-MCP - INFO - Performed sentiment analysis on column 'review_text'
+2025-11-23 16:13:37,395 - AI-Workflow-Orchestrator-MCP - INFO - Performed K-Means clustering with 3 clusters on features: ['rating', 'sentiment_score']
+2025-11-23 16:13:37,400 - AI-Workflow-Orchestrator-MCP - INFO - Extracted top 10 topics from column 'review_text'
+2025-11-23 16:13:37,839 - AI-Workflow-Orchestrator-MCP - ERROR - Error generating report: could not convert string to float: 'cluster_1.0'

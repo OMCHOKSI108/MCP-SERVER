@@ -1,0 +1,61 @@
+// SensCoder MCP Server - Local-First Coding Assistant
+digraph SensCoder_Architecture_Compact {
+	nodesep=0.3 rankdir=TB ranksep=0.6 splines=ortho
+	node [fillcolor=lightblue fontname=Arial fontsize=8 height=0.4 shape=box style="rounded,filled" width=1.2]
+	edge [arrowsize=0.5 fontname=Arial fontsize=7]
+	subgraph cluster_users {
+		color=lightgrey fontsize=9 label="Users & AI Apps" style=filled
+		web_users [label="Web Users
+(Browser)" fillcolor=beige fontsize=7 shape=ellipse]
+		ai_apps [label="AI Apps
+(Claude, VS Code)" fillcolor=lightcyan fontsize=7 shape=ellipse]
+	}
+	subgraph cluster_frontend {
+		color=lightgreen fontsize=9 label="Frontend (React/TS)" style=filled
+		dashboard [label="Dashboard
+(Chat, MCP)" fontsize=7]
+		admin [label="Admin Panel
+(Users, Logs)" fontsize=7]
+	}
+	subgraph cluster_backend {
+		color=lightyellow fontsize=9 label="Backend (Node.js)" style=filled
+		auth [label="Auth & Security
+(JWT, Rate Limit)" fontsize=7]
+		api_routes [label="API Routes
+(/auth, /admin, /chat)" fontsize=7]
+		mcp_mgmt [label="MCP Manager
+(Start/Stop)" fontsize=7]
+	}
+	subgraph cluster_database {
+		color=lightcoral fontsize=9 label="Database (MongoDB)" style=filled
+		db_models [label="Collections:
+Users, Logs, Keys, Settings" fillcolor=lightgreen fontsize=7 shape=cylinder]
+	}
+	subgraph cluster_mcp {
+		color=lightblue fontsize=9 label="MCP Server (FastAPI)" style=filled
+		mcp_core [label="MCP Core
+(/mcp/* endpoints)" fontsize=7]
+		tools [label="Tools (8+)
+File, Git, Terminal,
+Web Search, Code Analysis" fontsize=7]
+	}
+	subgraph cluster_external {
+		color=lightpink fontsize=9 label="External Services" style=filled
+		gemini [label="Gemini AI
+(Chat/Analysis)" fillcolor=gold fontsize=7 shape=diamond]
+		filesystem [label="File System
+& GitHub API" fillcolor=lightyellow fontsize=7 shape=folder]
+	}
+	web_users -> dashboard [label=HTTP]
+	ai_apps -> mcp_core [label=MCP style=dashed]
+	dashboard -> api_routes
+	admin -> api_routes
+	api_routes -> auth [label=Auth]
+	auth -> mcp_mgmt [label="MCP Control"]
+	api_routes -> db_models [label=CRUD]
+	mcp_mgmt -> mcp_core [label=Manage style=dashed]
+	mcp_core -> tools [label=Execute]
+	tools -> filesystem [label=Access]
+	tools -> gemini [label="AI Calls"]
+	api_routes -> gemini [label=Chat]
+}

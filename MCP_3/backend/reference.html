@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ShiningDocs – Add Your Project Files</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f5f7ff;
+      --bg-card: #ffffff;
+      --accent: #4f46e5;
+      --accent-soft: #e0e7ff;
+      --accent-secondary: #a855f7;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border-subtle: #e5e7eb;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.12);
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top left, #e3f2ff, transparent 60%),
+                  radial-gradient(circle at bottom right, #fce7ff, transparent 55%),
+                  var(--bg);
+      color: var(--text-main);
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(248, 250, 252, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 10px 24px rgba(79, 70, 229, 0.45);
+    }
+
+    .brand-text-title {
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-text-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+    }
+
+    .status-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+    }
+
+    .status-dot-grey {
+      background: #9ca3af;
+    }
+
+    .status-dot-red {
+      background: #ef4444;
+    }
+
+    /* Main wrapper */
+
+    .main {
+      flex: 1;
+      padding: 32px 24px 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    /* Tabs */
+
+    .tabs {
+      display: inline-flex;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+      margin-bottom: 28px;
+    }
+
+    .tab {
+      border: none;
+      outline: none;
+      padding: 10px 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      font-size: 14px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .tab span.emoji {
+      font-size: 16px;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #4f46e5, #a855f7);
+      color: #ffffff;
+      box-shadow: 0 10px 26px rgba(76, 81, 191, 0.5);
+    }
+
+    .tab:not(.active):hover {
+      background: rgba(243, 244, 246, 0.95);
+      color: #111827;
+    }
+
+    /* Card */
+
+    .card {
+      background: linear-gradient(145deg, #ffffff, #f4f4ff);
+      border-radius: 30px;
+      padding: 26px 26px 30px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+    }
+
+    .card-header {
+      margin-bottom: 22px;
+    }
+
+    .card-header h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0.02em;
+    }
+
+    .card-header p {
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Sections */
+
+    .section {
+      margin-top: 22px;
+      padding: 18px 18px 20px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+    }
+
+    .section + .section {
+      margin-top: 16px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .section-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* File path input */
+
+    .path-row {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .path-input {
+      flex: 1;
+      min-width: 260px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      font-size: 14px;
+      background: #f9fafb;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background-color 0.15s ease;
+    }
+
+    .path-input:focus {
+      border-color: #4f46e5;
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.35);
+    }
+
+    .btn-primary {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      background: linear-gradient(135deg, #4f46e5, #a855f7);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 12px 25px rgba(79, 70, 229, 0.4);
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        filter 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+      box-shadow: 0 16px 30px rgba(79, 70, 229, 0.5);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.4);
+    }
+
+    /* File upload area */
+
+    .upload-area {
+      margin-top: 10px;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1.5px dashed rgba(148, 163, 184, 0.9);
+      background: radial-gradient(circle at top left, #fef3ff, transparent 65%),
+                  #f9fafb;
+      text-align: center;
+    }
+
+    .upload-area h4 {
+      margin: 0 0 4px;
+      font-size: 14px;
+    }
+
+    .upload-area p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .upload-area input[type="file"] {
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 720px) {
+      .header {
+        padding-inline: 16px;
+      }
+      .status-row {
+        display: none;
+      }
+      .main {
+        padding-inline: 12px;
+      }
+      .card {
+        padding: 18px 16px 22px;
+      }
+      .tabs {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .tab {
+        flex: 1;
+        justify-content: center;
+        padding-inline: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div class="brand">
+        <div class="brand-logo">SD</div>
+        <div>
+          <div class="brand-text-title">ShiningDocs</div>
+          <div class="brand-text-sub">AI Documentation Generator</div>
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="status-item">
+          <span class="status-dot status-dot-grey"></span>
+          <span>API Keys Needed</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot status-dot-red"></span>
+          <span>MCP: Disconnected</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="content">
+        <!-- Top tabs -->
+        <div class="tabs">
+          <button class="tab active">
+            <span class="emoji">📁</span>
+            <span>Upload Files / Project Path</span>
+          </button>
+          <button class="tab">
+            <span class="emoji">📄</span>
+            <span>Generate Docs</span>
+          </button>
+          <button class="tab">
+            <span class="emoji">⚙️</span>
+            <span>MCP Server Setup</span>
+          </button>
+        </div>
+
+        <!-- Main card -->
+        <section class="card">
+          <header class="card-header">
+            <h1>Add Your Project Files</h1>
+            <p>Upload files directly or provide a file path that your local MCP server can access.</p>
+          </header>
+
+          <!-- File path input block -->
+          <section class="section">
+            <div class="section-header">
+              <div class="section-icon">📂</div>
+              <div>
+                <div class="section-title">File Path Input</div>
+                <div class="section-subtitle">
+                  Add paths to your local project repositories.
+                </div>
+              </div>
+            </div>
+
+            <div class="path-row">
+              <input
+                type="text"
+                class="path-input"
+                placeholder="/home/user/project/src/main.py or C:\\Users\\John\\Project"
+              />
+              <button class="btn-primary">
+                <span>＋</span>
+                <span>Add Path</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- File upload block -->
+          <section class="section">
+            <div class="section-header">
+              <div class="section-icon">📤</div>
+              <div>
+                <div class="section-title">File Upload</div>
+                <div class="section-subtitle">
+                  Or upload files directly — supports Python, JS, Java, Go, JSON, Markdown, YAML.
+                </div>
+              </div>
+            </div>
+
+            <div class="upload-area">
+              <h4>Drag &amp; drop files here, or click to browse</h4>
+              <p>Files will be processed locally by your MCP server.</p>
+              <input type="file" multiple />
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

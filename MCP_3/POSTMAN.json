@@ -1,0 +1,1011 @@
+{
+  "info": {
+    "name": "SensCoder MCP Server API",
+    "description": "Complete API collection for SensCoder - A comprehensive local-first coding assistant platform with MCP server integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:4000",
+      "type": "string"
+    },
+    {
+      "key": "mcp_base_url",
+      "value": "http://localhost:5050",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_email",
+      "value": "omchoksi@gmail.com",
+      "type": "string"
+    },
+    {
+      "key": "admin_password",
+      "value": "admin123",
+      "type": "string"
+    },
+    {
+      "key": "test_user_email",
+      "value": "test@example.com",
+      "type": "string"
+    },
+    {
+      "key": "test_user_password",
+      "value": "test123",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Status",
+      "item": [
+        {
+          "name": "Backend Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health"]
+            },
+            "description": "Check backend server health and database connectivity"
+          },
+          "response": []
+        },
+        {
+          "name": "MCP Server Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{mcp_base_url}}/mcp/health",
+              "host": ["{{mcp_base_url}}"],
+              "path": ["mcp", "health"]
+            },
+            "description": "Check MCP server health and capabilities"
+          },
+          "response": []
+        },
+        {
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Get server information and available endpoints"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "User Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{test_user_email}}\",\n  \"password\": \"{{test_user_password}}\",\n  \"name\": \"Test User\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/signup",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "signup"]
+            },
+            "description": "Create a new user account"
+          },
+          "response": []
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Authenticate user and get JWT token",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "if (pm.response.code === 200) {",
+                    "    const response = pm.response.json();",
+                    "    pm.collectionVariables.set('auth_token', response.token);",
+                    "    pm.collectionVariables.set('user_id', response.user.id);",
+                    "    console.log('Token saved:', response.token.substring(0, 20) + '...');",
+                    "}"
+                  ],
+                  "type": "text/javascript"
+                }
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            },
+            "description": "Get current authenticated user information"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Panel",
+      "item": [
+        {
+          "name": "Get Admin Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats"]
+            },
+            "description": "Get comprehensive admin statistics (users, messages, API calls, etc.)"
+          },
+          "response": []
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users?page=1&limit=10&search=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search users by name or email"
+                }
+              ]
+            },
+            "description": "Get paginated list of all users with filtering options"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"role\": \"user\",\n  \"isBanned\": false,\n  \"isBlocked\": false,\n  \"dailyMessages\": 50\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}"]
+            },
+            "description": "Update user information (role, status, limits, etc.)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}"]
+            },
+            "description": "Permanently delete a user account"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Gemini API Keys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/gemini-keys",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "gemini-keys"]
+            },
+            "description": "List all configured Gemini API keys"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Gemini API Key",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Primary Key\",\n  \"key\": \"AIzaSyDfUKG7-i_QcaZF8RFUHXtRePapuA3I1RQ\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/gemini-keys",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "gemini-keys"]
+            },
+            "description": "Add a new Gemini API key for AI integration"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Gemini API Key",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Key Name\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/gemini-keys/{{key_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "gemini-keys", "{{key_id}}"]
+            },
+            "description": "Update API key settings (name, status, etc.)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Gemini API Key",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/gemini-keys/{{key_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "gemini-keys", "{{key_id}}"]
+            },
+            "description": "Remove a Gemini API key"
+          },
+          "response": []
+        },
+        {
+          "name": "Get System Settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/settings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "settings"]
+            },
+            "description": "Get current system settings and configuration"
+          },
+          "response": []
+        },
+        {
+          "name": "Update System Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dailyLimit\": 100,\n  \"maintenanceMode\": false,\n  \"banner\": \"Welcome to SensCoder!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/settings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "settings"]
+            },
+            "description": "Update system-wide settings (limits, maintenance mode, banners)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Activity Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/logs?page=1&limit=50&action=&level=&startDate=&endDate=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "logs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "action",
+                  "value": "",
+                  "description": "Filter by action type"
+                },
+                {
+                  "key": "level",
+                  "value": "",
+                  "description": "Filter by log level (info, warning, error, critical)"
+                },
+                {
+                  "key": "startDate",
+                  "value": "",
+                  "description": "Start date filter (YYYY-MM-DD)"
+                },
+                {
+                  "key": "endDate",
+                  "value": "",
+                  "description": "End date filter (YYYY-MM-DD)"
+                }
+              ]
+            },
+            "description": "Get paginated activity logs with filtering options"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Log Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/logs/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "logs", "stats"]
+            },
+            "description": "Get activity log statistics and summary"
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Old Logs",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/logs?days=30",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "logs"],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30",
+                  "description": "Delete logs older than specified days"
+                }
+              ]
+            },
+            "description": "Clear activity logs older than specified days"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat & AI",
+      "item": [
+        {
+          "name": "Send Chat Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Hello! Can you help me with React development?\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chat",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chat"]
+            },
+            "description": "Send a message to the AI assistant and get a response"
+          },
+          "response": []
+        },
+        {
+          "name": "Send Chat Message (Streaming)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Explain how to create a REST API in Node.js\"\n    }\n  ],\n  \"stream\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/chat",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chat"]
+            },
+            "description": "Send a streaming chat message for real-time responses"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Settings",
+      "item": [
+        {
+          "name": "Get User Settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/settings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "settings"]
+            },
+            "description": "Get current user settings and preferences"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"theme\": \"dark\",\n  \"notifications\": true,\n  \"language\": \"en\",\n  \"timezone\": \"UTC\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/settings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "settings"]
+            },
+            "description": "Update user preferences and settings"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Integrations",
+      "item": [
+        {
+          "name": "Get Integration Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/integrations/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "integrations", "status"]
+            },
+            "description": "Check status of external integrations (GitHub, Slack, etc.)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MCP Server",
+      "item": [
+        {
+          "name": "Start MCP Server",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"config\": {\n    \"project_root\": \"D:\\\\WORKSPACE\\\\MCP\\\\MCP_3\",\n    \"allow_exec\": false,\n    \"allow_git\": true\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/mcp/start",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mcp", "start"]
+            },
+            "description": "Start the MCP server instance"
+          },
+          "response": []
+        },
+        {
+          "name": "Stop MCP Server",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mcp/stop",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mcp", "stop"]
+            },
+            "description": "Stop the running MCP server instance"
+          },
+          "response": []
+        },
+        {
+          "name": "Get MCP Server Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mcp/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mcp", "status"]
+            },
+            "description": "Check MCP server running status and configuration"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MCP Protocol Endpoints",
+      "item": [
+        {
+          "name": "MCP Authenticate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"test-user\"\n}"
+            },
+            "url": {
+              "raw": "{{mcp_base_url}}/mcp/auth/login",
+              "host": ["{{mcp_base_url}}"],
+              "path": ["mcp", "auth", "login"]
+            },
+            "description": "Authenticate with MCP server for tool access"
+          },
+          "response": []
+        },
+        {
+          "name": "Invoke MCP Tool - Echo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tool\": \"echo\",\n  \"params\": {\n    \"text\": \"Hello from Postman!\"\n  },\n  \"user_id\": \"test-user\"\n}"
+            },
+            "url": {
+              "raw": "{{mcp_base_url}}/mcp/tool-invoke",
+              "host": ["{{mcp_base_url}}"],
+              "path": ["mcp", "tool-invoke"]
+            },
+            "description": "Test MCP tool invocation with echo tool"
+          },
+          "response": []
+        },
+        {
+          "name": "Invoke MCP Tool - Math",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tool\": \"math\",\n  \"params\": {\n    \"expression\": \"15 + 27 * 3\"\n  },\n  \"user_id\": \"test-user\"\n}"
+            },
+            "url": {
+              "raw": "{{mcp_base_url}}/mcp/tool-invoke",
+              "host": ["{{mcp_base_url}}"],
+              "path": ["mcp", "tool-invoke"]
+            },
+            "description": "Test mathematical expression evaluation"
+          },
+          "response": []
+        },
+        {
+          "name": "Invoke MCP Tool - List Files",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tool\": \"list_files\",\n  \"params\": {\n    \"path\": \".\"\n  },\n  \"user_id\": \"test-user\"\n}"
+            },
+            "url": {
+              "raw": "{{mcp_base_url}}/mcp/tool-invoke",
+              "host": ["{{mcp_base_url}}"],
+              "path": ["mcp", "tool-invoke"]
+            },
+            "description": "List files in the project directory"
+          },
+          "response": []
+        },
+        {
+          "name": "Invoke MCP Tool - Read File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tool\": \"read_file\",\n  \"params\": {\n    \"file_path\": \"README.md\"\n  },\n  \"user_id\": \"test-user\"\n}"
+            },
+            "url": {
+              "raw": "{{mcp_base_url}}/mcp/tool-invoke",
+              "host": ["{{mcp_base_url}}"],
+              "path": ["mcp", "tool-invoke"]
+            },
+            "description": "Read the contents of a file"
+          },
+          "response": []
+        },
+        {
+          "name": "Get MCP Resources",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{mcp_base_url}}/mcp/resources",
+              "host": ["{{mcp_base_url}}"],
+              "path": ["mcp", "resources"]
+            },
+            "description": "Get available MCP resources and information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get MCP Prompts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{mcp_base_url}}/mcp/prompts",
+              "host": ["{{mcp_base_url}}"],
+              "path": ["mcp", "prompts"]
+            },
+            "description": "Get available MCP prompt templates"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Workflow Examples",
+      "item": [
+        {
+          "name": "Complete User Registration Flow",
+          "item": [
+            {
+              "name": "1. Register New User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"workflow@example.com\",\n  \"password\": \"workflow123\",\n  \"name\": \"Workflow User\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/signup",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "signup"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "2. Login with New User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"workflow@example.com\",\n  \"password\": \"workflow123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "3. Send Chat Message",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Hello! I'm testing the complete workflow.\"\n    }\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/chat",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "chat"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Admin Management Flow",
+          "item": [
+            {
+              "name": "1. Admin Login",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/auth/login",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "2. Get System Statistics",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/stats",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "admin", "stats"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "3. View Activity Logs",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/logs?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "admin", "logs"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "MCP Integration Flow",
+          "item": [
+            {
+              "name": "1. MCP Server Health",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{mcp_base_url}}/mcp/health",
+                  "host": ["{{mcp_base_url}}"],
+                  "path": ["mcp", "health"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "2. MCP Authentication",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": \"test-user\"\n}"
+                },
+                "url": {
+                  "raw": "{{mcp_base_url}}/mcp/auth/login",
+                  "host": ["{{mcp_base_url}}"],
+                  "path": ["mcp", "auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "3. List Available Tools",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{mcp_base_url}}/mcp/resources",
+                  "host": ["{{mcp_base_url}}"],
+                  "path": ["mcp", "resources"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "4. Execute File Operation",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tool\": \"list_files\",\n  \"params\": {\n    \"path\": \".\"\n  },\n  \"user_id\": \"test-user\"\n}"
+                },
+                "url": {
+                  "raw": "{{mcp_base_url}}/mcp/tool-invoke",
+                  "host": ["{{mcp_base_url}}"],
+                  "path": ["mcp", "tool-invoke"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set default headers for all requests",
+          "pm.request.headers.add({key: 'User-Agent', value: 'Postman/SensCoder-API-Testing'});",
+          "",
+          "// Log current environment",
+          "console.log('Environment:', pm.environment.name);",
+          "console.log('Base URL:', pm.collectionVariables.get('base_url'));"
+        ]
+      }
+    }
+  ]
+}

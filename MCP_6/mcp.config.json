@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "excalidraw": {
+      "command": "cmd",
+      "args": ["/c", "cd /d D:\\WORKSPACE\\MCP\\MCP_6 && venv\\Scripts\\activate && python server.py"],
+      "env": {
+        "WS_PORT": "5000"
+      }
+    }
+  }
+}

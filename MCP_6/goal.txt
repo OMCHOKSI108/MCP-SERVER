@@ -1,0 +1,381 @@
+You are an expert in:
+
+Python backend (FastAPI / Starlette)
+
+WebSocket real-time collaboration
+
+REST API design
+
+Excalidraw sync and storage
+
+Model Context Protocol (MCP) using the Python SDK (modelcontextprotocol package)
+
+Clean project structure, DX, and documentation
+
+I already have a frontend Excalidraw React app in MCP_6/frontend with these files:
+
+index.html
+
+HTML shell for the Excalidraw POC app
+
+Header with connection status, sync controls, clear canvas button
+
+Container for Excalidraw canvas
+
+UI styles for buttons, notifications, loading states, sync status
+
+Loads React app via main.tsx
+
+src/App.tsx
+
+Main React component
+
+Integrates Excalidraw for drawing
+
+Uses a WebSocket connection for real-time collaboration
+
+Uses a backend REST API for syncing elements
+
+Supports Mermaid diagram conversion via a utility
+
+Manages sync status with visual feedback
+
+Validates/fixes element bindings
+
+Implements CRUD for Excalidraw elements via REST API
+
+src/main.tsx
+
+React entry point
+
+Renders <App /> into the root
+
+Imports necessary React & Excalidraw deps
+
+src/utils/mermaidConverter.ts
+
+Uses @excalidraw/mermaid-to-excalidraw
+
+Async conversion function with error handling
+
+Returns Excalidraw elements + any files
+
+YOUR GOAL
+
+Do NOT rewrite the frontend from scratch.
+
+First, inspect the existing frontend files you just read.
+
+Infer exactly:
+
+WebSocket URL and protocol it expects (path, messages, events)
+
+REST API endpoints it calls (paths, HTTP verbs, payloads)
+
+Data format for Excalidraw elements and “documents/boards”
+
+Then, design and implement a Python backend + MCP server that:
+
+Satisfies what the frontend already expects (same endpoints / WS paths)
+
+Adds persistent storage for Excalidraw boards
+
+Exposes MCP tools so an AI agent (Claude desktop etc.) can:
+
+Create a new board
+
+List existing boards
+
+Load a board’s JSON
+
+Overwrite/update a board’s JSON
+
+Append new elements from AI to an existing board
+
+Export a board to .excalidraw or .json
+
+Output everything as code blocks I can paste into my project.
+
+BACKEND / MCP REQUIREMENTS (PYTHON)
+1. Tech stack & structure
+
+Use:
+
+Python 3.10+
+
+FastAPI for REST endpoints
+
+uvicorn as the ASGI server
+
+Built-in FastAPI/WebSocket support for real-time collab
+
+modelcontextprotocol Python SDK for MCP server over stdio
+
+pydantic models for typing Excalidraw boards/elements
+
+Create a folder MCP_6/server (sibling to frontend) with a Python package, e.g.:
+
+server/
+  requirements.txt        # or pyproject.toml, your choice
+  mcp_excalidraw/
+    __init__.py
+    main.py               # entry: starts FastAPI + MCP stdio
+    http_server.py        # REST routes
+    websocket_hub.py      # WebSocket handling, broadcasting
+    excalidraw_store.py   # in-memory + file-based persistence
+    mcp_server.py         # MCP tools & server setup
+    types.py              # Pydantic models / types
+    config.py             # basic config (paths, ports, env)
+    data/
+      boards/
+        # JSON files per board
+      index.json          # list of boards metadata
+
+
+If you think a slightly different structure is cleaner, you can adjust, but keep it simple and well separated.
+
+2. Persistence
+
+Implement excalidraw_store.py with a simple JSON-based store:
+
+Root data dir configurable via env var, default: ./data
+
+Directory: data/boards/
+
+Each board: data/boards/{board_id}.json
+
+Index file: data/index.json listing:
+
+id, title, created_at, updated_at
+
+Use Pydantic models in types.py:
+
+ExcalidrawElement
+
+ExcalidrawAppState (optional / minimal)
+
+ExcalidrawFiles (dict or similar)
+
+ExcalidrawBoardData (elements + appState + files)
+
+ExcalidrawBoardMeta (id, title, timestamps)
+
+ExcalidrawBoard (meta + data)
+
+The structure should be able to store:
+
+Excalidraw elements array
+
+App state (if needed for proper restore)
+
+Files (or at least a placeholder)
+
+3. REST API design (FastAPI)
+
+Make sure REST routes match what App.tsx already calls.
+If the frontend doesn’t fully define them, choose something like:
+
+GET    /api/boards                 # list boards
+POST   /api/boards                 # create new board (optional initial data)
+GET    /api/boards/{id}            # get full board data
+PUT    /api/boards/{id}            # overwrite/update full board
+PATCH  /api/boards/{id}            # partial update (optional)
+DELETE /api/boards/{id}            # delete board
+
+POST   /api/boards/{id}/elements   # append or bulk replace elements
+
+
+Details:
+
+Define proper Pydantic request/response models.
+
+Add CORS middleware for localhost frontend (e.g. origin http://localhost:5173 or whatever port the frontend uses).
+
+The actual implementation MUST be compatible with how App.tsx currently calls it.
+
+If the frontend needs minor changes (e.g. URL paths slightly different), propose a small “before/after” diff at the end.
+
+4. WebSocket design
+
+Implement websocket_hub.py using FastAPI’s WebSocket support.
+
+Path should match what App.tsx expects, e.g.:
+
+/ws
+
+or /ws/boards/{board_id}
+
+Use exactly what you infer from the existing frontend code.
+
+Design a simple message protocol (adjust to match App.tsx):
+
+# Example (adjust to match frontend):
+ClientMessage =
+  { "type": "join", "boardId": "..." } |
+  { "type": "elements:update", "boardId": "...", "elements": [...] } |
+  { "type": "sync:request", "boardId": "..." }
+
+ServerMessage =
+  { "type": "joined", "boardId": "..." } |
+  { "type": "elements:full", "boardId": "...", "elements": [...] } |
+  { "type": "elements:patch", "boardId": "...", "elements": [...] } |
+  { "type": "error", "message": "..." }
+
+
+Maintain a connection registry per board_id to broadcast updates to all connected clients on the same board.
+
+Optionally include ping/pong or heartbeat to track connection status (if frontend uses it).
+
+5. MCP server (Python)
+
+Use the Python MCP SDK:
+
+Package name: modelcontextprotocol (or the current official package)
+
+Implement tools so an AI agent can manipulate boards via MCP (without the browser).
+
+Create mcp_server.py that:
+
+Defines MCP tools such as:
+
+excalidraw_list_boards
+
+Inputs: none
+
+Output: list of boards { id, title, created_at, updated_at }
+
+excalidraw_get_board
+
+Inputs: id: str
+
+Output: full board JSON { id, title, data } (data = elements/appState/files)
+
+excalidraw_create_board
+
+Inputs: title: str | None = None, optional initial elements
+
+Output: created board summary { id, title }
+
+excalidraw_update_board
+
+Inputs: id: str, data: ExcalidrawBoardData or dict
+
+Behaviour: overwrite existing stored JSON for that board
+
+excalidraw_append_elements
+
+Inputs: id: str, elements: list[ExcalidrawElement]
+
+Behaviour: append elements (or merge by ID if that fits better with frontend logic)
+
+excalidraw_export_board
+
+Inputs: id: str, format: Literal["json", "excalidraw"]
+
+Output: serialized string representing the board in that format (the caller can save it as a file).
+
+Uses your excalidraw_store module to read/write boards.
+
+Runs on stdio for MCP.
+
+Create main.py that:
+
+Creates the FastAPI app (importing routes & WebSocket setup).
+
+Starts the MCP server for stdio use (e.g. via asyncio.run()).
+
+You can either:
+
+Start FastAPI via uvicorn separately, and keep MCP stdio as a separate entry point, or
+
+Provide two entry scripts:
+
+python -m mcp_excalidraw.main_api (for HTTP/WebSockets)
+
+python -m mcp_excalidraw.main_mcp (for MCP stdio)
+
+Choose a clean and simple approach; just document clearly how to run both.
+
+6. Dependencies / requirements
+
+Provide a requirements.txt (or pyproject.toml). For example:
+
+fastapi
+
+uvicorn[standard]
+
+pydantic
+
+modelcontextprotocol (Python MCP SDK)
+
+python-dotenv (optional, for env config)
+
+Anything else you actually use
+
+7. Claude / MCP client config example
+
+At the end, show an example of how to configure this in Claude Desktop MCP config, something like:
+
+{
+  "mcpServers": {
+    "excalidraw-mcp": {
+      "command": "python",
+      "args": ["-m", "mcp_excalidraw.main_mcp"],
+      "env": {
+        "EXCALIDRAW_DATA_DIR": "./data"
+      }
+    }
+  }
+}
+
+
+You don’t need to be perfect on the exact file name; just show a clear example I can adapt.
+
+8. Response format
+
+Respond with:
+
+A short high-level overview (2–3 sentences) of the architecture you’re creating.
+
+A tree view of the new server/ folder.
+
+The full contents of each important file in separate code blocks:
+
+server/requirements.txt (or pyproject.toml)
+
+server/mcp_excalidraw/__init__.py
+
+server/mcp_excalidraw/config.py
+
+server/mcp_excalidraw/types.py
+
+server/mcp_excalidraw/excalidraw_store.py
+
+server/mcp_excalidraw/http_server.py
+
+server/mcp_excalidraw/websocket_hub.py
+
+server/mcp_excalidraw/mcp_server.py
+
+server/mcp_excalidraw/main_api.py (FastAPI entry)
+
+server/mcp_excalidraw/main_mcp.py (MCP stdio entry)
+
+Any minimal changes required in the frontend (if needed) as patch-style or “before/after” code snippets.
+
+A short section: “How to run” with commands:
+
+create and activate venv
+
+install dependencies
+
+start HTTP/WebSocket server
+
+run as MCP server for Claude
+
+Make sure all Python code is self-contained and runnable, with correct imports and no missing pieces.
+
+
+inshort :
+
+

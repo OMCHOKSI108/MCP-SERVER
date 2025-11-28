@@ -1,0 +1,4 @@
+fastmcp
+pydantic
+websockets
+python-dotenv

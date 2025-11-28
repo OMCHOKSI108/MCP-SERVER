@@ -1,0 +1,224 @@
+
+Read the following project files:
+
+* `MCP_6/frontend/index.html`
+* `MCP_6/frontend/src/App.tsx`
+* `MCP_6/frontend/src/main.tsx`
+* `MCP_6/frontend/src/utils/mermaidConverter.ts`
+
+You are an expert in:
+
+* Python backend (FastAPI / Starlette)
+* WebSockets for real-time collaboration
+* REST API design for Excalidraw element sync
+* JSON and file-based persistence
+* Headless export of PNG & SVG
+* Model Context Protocol (MCP) using `modelcontextprotocol` Python SDK
+* Clean modular project structure, DX, and documentation
+
+The existing frontend is a React-based Excalidraw app with:
+
+* WebSockets for live scene sync
+* REST API for full board storage
+* Mermaid diagram conversion
+* Element CRUD operations
+* Sync status management, validation, binding fixes
+
+---
+
+## 🎯 YOUR TASK
+
+Inspect the existing frontend files.
+Then generate a **Python backend with both HTTP/WS + MCP tools**, fully compatible with the current frontend without rewrites.
+
+---
+
+## 🏗 Server Architecture Requirements
+
+Create a new directory:
+
+```
+MCP_6/server/
+```
+
+Use:
+
+* **FastAPI** for REST API + WebSocket
+* **Uvicorn** as the ASGI server
+* **Pydantic** for models
+* **modelcontextprotocol** SDK for MCP over stdio
+* JSON-based persistence
+
+Structure (or a cleaner equivalent):
+
+```
+server/
+  requirements.txt
+  mcp_excalidraw/
+    __init__.py
+    config.py
+    types.py
+    excalidraw_store.py
+    http_server.py
+    websocket_hub.py
+    mcp_server.py
+    main_api.py        # HTTP + WS entrypoint
+    main_mcp.py        # MCP stdio entrypoint
+    data/
+      index.json
+      boards/
+```
+
+---
+
+## 📌 Storage Rules
+
+Each board must be saved under:
+
+```
+data/boards/<boardId>.json
+```
+
+`index.json` tracks:
+
+```
+[
+  { "id": "...", "title": "...", "created_at": "...", "updated_at": "..." }
+]
+```
+
+---
+
+## 🔗 REST API Requirements
+
+Match what the current `App.tsx` already calls.
+If unclear, implement the following (and adjust only if necessary):
+
+```
+GET    /api/boards
+POST   /api/boards
+GET    /api/boards/{id}
+PUT    /api/boards/{id}
+DELETE /api/boards/{id}
+POST   /api/boards/{id}/elements
+```
+
+CORS must allow the frontend development domain (e.g., `localhost:5173`).
+
+---
+
+## 🔌 WebSocket Requirements
+
+Match the path already used in `App.tsx` (likely `/ws/boards/{id}` or `/ws`).
+Protocol example (adjust to match exactly what `App.tsx` expects):
+
+Client → Server:
+
+```
+{ "type": "join", "boardId": "..." }
+{ "type": "elements:update", "boardId": "...", "elements": [...] }
+{ "type": "sync:request", "boardId": "..." }
+```
+
+Server → Client:
+
+```
+{ "type": "joined", "boardId": "..." }
+{ "type": "elements:full", "boardId": "...", "elements": [...] }
+{ "type": "elements:patch", "boardId": "...", "elements": [...] }
+{ "type": "error", "message": "..." }
+```
+
+---
+
+## 🧠 MCP SERVER REQUIREMENTS (Python)
+
+Expose MCP tools so an AI agent like **Claude Desktop** can manage boards and elements **without the UI**.
+
+### Required Tools (ALL MUST BE IMPLEMENTED)
+
+#### 🔹 Scene-level tools
+
+```
+clear_scene
+load_scene
+save_scene
+export_png
+export_svg
+export_excalidraw
+import_excalidraw
+set_viewport
+get_viewport
+subscribe_scene_updates
+push_changes
+auto_layout
+connect_elements
+generate_diagram
+create_from_mermaid
+```
+
+#### 🔹 Element-level tools
+
+```
+create_element
+update_element
+delete_element
+batch_create_elements
+query_elements
+group_elements
+ungroup_elements
+align_elements
+distribute_elements
+lock_elements
+unlock_elements
+```
+
+#### 🔹 Library tools
+
+```
+add_library_item
+delete_library_item
+list_library_items
+```
+
+---
+
+## ⚙ MCP Tool Design Notes
+
+* All tools operate on **multiple boards** (so include `boardId` parameter).
+* Each tool must validate board existence and return structured error messages.
+* Heavy tasks (`auto_layout`, `generate_diagram`, `export_png`, `export_svg`, `create_from_mermaid`) may run blocking — no async queue required unless absolutely needed.
+
+---
+
+## 📦 Final Deliverables
+
+Respond with:
+
+1. A **tree view** of the generated backend project
+2. A short **architecture overview**
+3. Full code for every file in separate code blocks:
+
+   * `requirements.txt`
+   * `mcp_excalidraw/__init__.py`
+   * `mcp_excalidraw/config.py`
+   * `mcp_excalidraw/types.py`
+   * `mcp_excalidraw/excalidraw_store.py`
+   * `mcp_excalidraw/http_server.py`
+   * `mcp_excalidraw/websocket_hub.py`
+   * `mcp_excalidraw/mcp_server.py`
+   * `mcp_excalidraw/main_api.py`
+   * `mcp_excalidraw/main_mcp.py`
+4. Any **minimal required changes** in the frontend as patch-style diffs
+5. **How to run**:
+
+   * create venv
+   * install deps
+   * start HTTP/WS server
+   * run as MCP server for Claude
+6. Example **Claude Desktop config** section to enable the MCP server
+
+All code must be **copy-paste runnable**, use clean imports, and include comments for maintainability.
+
+
+taskkill /F /IM python.exe ; taskkill /F /IM node.exe
